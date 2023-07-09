@@ -1,0 +1,53 @@
+.bg {
+  background-image: linear-gradient(to bottom, #dcd62c, #e213b1, #191d61);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.heading {
+  border: solid red;
+  color: White;
+}
+
+.login-register-container {
+  background-color: white;
+  height: 300px;
+  width: 500px;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.x {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 90vh;
+}
+
+.logo {
+  width: 80px;
+}
+.logo-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+.register-button {
+  align-self: flex-start;
+}
+.InputField {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+label {
+  margin-bottom: 5px;
+}

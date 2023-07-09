@@ -1,0 +1,143 @@
+.bg {
+  /* background-image: linear-gradient(to bottom, #dcd62c, #e213b1, #191d61); */
+  background-image: url("chatBackground.png");
+  height: 100vh;
+  /* border:solid purple; */
+  /* width:100vw; */
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.chats-conatiner {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  width: 400px;
+  height: 100vh;
+}
+.home-loader-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.search-container {
+  display: flex;
+  border: solid black;
+  flex-direction: row;
+  align-items: center;
+  width: 280px;
+  padding: 5px;
+}
+.search {
+  width: 250px;
+  height: 40px;
+  border: none;
+  outline: none;
+}
+
+.search-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+.chatsHeading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+}
+
+.contact-item:hover {
+  background-color: grey;
+}
+
+.contact-logo {
+  background-color: red;
+  font-size: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+}
+
+.messages-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: solid white;
+  width: 80%;
+}
+
+.message-input {
+  width: calc(100% - 80px);
+  margin-right: 10px;
+  border: none;
+  outline: none;
+  background-color: transparent;
+}
+/* .msg-input-cotainer {
+  display: flex;
+  align-items: center;
+  position: fixed;
+  left: 280px;
+  bottom: 20px;
+  right: 20px;
+  width: calc(100% - 80px);
+  height: 20px;
+  background-color: transparent;
+  padding: 10px 20px;
+  border-radius: 20px;
+  border: solid grey 1px;
+} */
+.msg-input-container {
+  justify-self: flex-end;
+  display: flex;
+  align-items: center;
+  /* position: fixed ; */
+  /* left: 280px; */
+  bottom: 20px;
+  /* right: 20px; */
+  width: 90%;
+  height: 20px;
+  background-color: transparent;
+  padding: 10px 20px;
+  border-radius: 20px;
+  border: solid grey 1px;
+}
+
+.messages-container2 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  height: 100vh;
+}
+
+.Allmessages {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  height: 100vh;
+  width: 100%;
+  /* border: solid red; */
+}
+
+.messages {
+  /* padding:20px; */
+  /* border: solid yellow; */
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+/* display: flex; */
