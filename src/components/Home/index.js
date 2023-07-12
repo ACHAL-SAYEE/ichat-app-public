@@ -40,7 +40,7 @@ class Home extends Component {
 
   initializeSocketConnection = () => {
     const { userDetails } = this.state;
-    const socket = socketIOClient("http://localhost:3007");
+    const socket = socketIOClient("https://apis-ichat.onrender.com");
 
     socket.on("newMessage", (newMessageDetils) => {
       this.updateMessagesList(newMessageDetils);
@@ -68,7 +68,7 @@ class Home extends Component {
     });
     const iChatJwtToken = Cookies.get("ichat_jwt_token");
 
-    const apiUrl = "http://localhost:3007/profile";
+    const apiUrl = "https://apis-ichat.onrender.com/profile";
     const options = {
       headers: {
         Authorization: `Bearer ${iChatJwtToken}`,
@@ -130,7 +130,7 @@ class Home extends Component {
 
     const { phoneNo, contactname } = this.state;
     const userDetails = { phoneNo, contactname };
-    const apiUrl = "http://localhost:3007/addContact";
+    const apiUrl = "https://apis-ichat.onrender.com/addContact";
     const options = {
       headers: {
         Authorization: `Bearer ${iChatJwtToken}`,
@@ -182,11 +182,8 @@ class Home extends Component {
     const { socket } = this.state;
     if (event.key === "Enter" && this.state.messageInput !== "") {
       const { messageInput, userDetails } = this.state;
-      // const logoColor = user_logo_colors[randomNumber];
       const msg = messageInput;
       const MsgSentTime = new Date();
-      // console.log(MsgSentTime);
-      // console.log(typeof MsgSentTime);
       const id = uuidv4();
       const MessageDetails = {
         msg,
@@ -199,7 +196,7 @@ class Home extends Component {
         ToUser,
         MessageDetails,
       };
-      const apiUrl = "http://localhost:3007/sendMessage";
+      const apiUrl = "https://apis-ichat.onrender.com/sendMessage";
       const options = {
         headers: {
           Authorization: `Bearer ${iChatJwtToken}`,

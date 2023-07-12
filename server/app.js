@@ -1,6 +1,7 @@
+require("dotenv").config();
+const PORT = process.env.PORT || 4000;
 const express = require("express");
 const cors = require("cors");
-const path = require("path");
 const twilio = require("twilio");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
@@ -8,32 +9,30 @@ const http = require("http");
 const socketIO = require("socket.io");
 
 const app = express();
-app.use(cors()); 
+
+app.use(cors());
 app.use(express.json());
 
-const server = http.createServer(app); 
+const server = http.createServer(app);
 const io = socketIO(server, {
-  cors: { origin: "http://localhost:3000" }, 
+  cors: [{ origin: "https://localhost:3000" }],
 });
 
-const dbURI = "mongodb://localhost:27017/ichat"; 
-const accountSid = "";//twilo accountSid you get after signing up 
-const authToken = "";//twilo authToken you get after signing up 
+const dbURI = "mongodb://localhost:27017/ichat";
+const accountSid = "AC93fdc6cf68d13ca6baa48c0e48ad34a6"; //twilo accountSid you get after signing up
+const authToken = "89c40a250446aadaba9f475959fa33a1"; //twilo authToken you get after signing up
 const client = new twilio(accountSid, authToken);
-
-let registerOtp = null;
-let loginOtp = null;
 
 const initializeDBAndServer = async () => {
   try {
-    await mongoose.connect(dbURI, {
+    await mongoose.connect(process.env.MONGO_URL, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
 
     app.set("socket", io);
 
-    server.listen(3007, () => {
+    server.listen(PORT, () => {
       console.log("Server running on port 3007");
     });
   } catch (e) {
@@ -83,9 +82,17 @@ const userSchema = new mongoose.Schema({
     },
   ],
   socketId: String,
+  generatedOtp: Number,
+});
+
+const tempUserSchema = new mongoose.Schema({
+  phoneNo: String,
+  socketId: String,
+  generatedOtp: Number,
 });
 
 const User = mongoose.model("User", userSchema);
+const TempUser = mongoose.model("TempUser", tempUserSchema);
 
 app.get("/", (req, res) => {
   res.status(200).send("This server is now public");
@@ -93,23 +100,27 @@ app.get("/", (req, res) => {
 
 app.post("/registerOtp", async (request, response) => {
   const { phoneNo } = request.body;
-  console.log(phoneNo);
   try {
     const user = await User.findOne({ phoneNo });
-    console.log(user);
     if (!user) {
-      registerOtp = Math.floor(100000 + Math.random() * 900000);
+      const registerOtp = Math.floor(100000 + Math.random() * 900000);
+      const tempUser = new TempUser({
+        phoneNo,
+        generatedOtp: registerOtp,
+        socketId: "",
+      });
+      await tempUser.save();
       response.status(200);
       response.send({ otp: registerOtp });
 
       const textmessage = `Your otp to register for ichat app is ${registerOtp}`;
-      client.messages
-        .create({
-          body: textmessage,
-          to: `+91${phoneNo}`,
-          from: "+16183531862",
-        })
-        .then((message) => console.log(message.body));
+      // client.messages
+      //   .create({
+      //     body: textmessage,
+      //     to: `+91${phoneNo}`,
+      //     from: "+16183531862",
+      //   })
+      //   .then((message) => console.log(message.body));
     } else {
       response.status(401);
       response.send({
@@ -136,18 +147,22 @@ app.post("/loginOtp", async (request, response) => {
         error_msg: `There does not exist any account with ${phoneNo}.Please try a different number`,
       });
     } else {
-      loginOtp = Math.floor(100000 + Math.random() * 900000);
+      const loginOtp = Math.floor(100000 + Math.random() * 900000);
+      await User.updateOne(
+        { phoneNo: phoneNo },
+        { $set: { generatedOtp: loginOtp } }
+      );
       response.status(200);
       response.send({ otp: loginOtp });
 
-      const textmessage = `Your otp to login for ichat app is ${loginOtp}`;
-      client.messages
-        .create({
-          body: textmessage,
-          to: `+91${phoneNo}`,
-          from: "+16183531862",
-        })
-        .then((message) => console.log(message.body));
+      // const textmessage = `Your otp to login for ichat app is ${loginOtp}`;
+      // client.messages
+      //   .create({
+      //     body: textmessage,
+      //     to: `+91${phoneNo}`,
+      //     from: "+16183531862",
+      //   })
+      //   .then((message) => console.log(message.body));
     }
   } catch (e) {
     console.log(e);
@@ -158,9 +173,11 @@ app.post("/loginOtp", async (request, response) => {
 
 app.post("/registerVerifyOtp", async (req, res) => {
   const { phoneNo, otp, name } = req.body;
+  const TempUserDetails = await TempUser.findOne({ phoneNo });
+  const generatedOtp = TempUserDetails.generatedOtp;
+  console.log(generatedOtp);
   console.log(otp);
-  console.log(registerOtp);
-  if (otp == registerOtp) {
+  if (otp == generatedOtp) {
     try {
       const user = new User({
         name,
@@ -170,6 +187,7 @@ app.post("/registerVerifyOtp", async (req, res) => {
         socketId: "",
       });
       await user.save();
+      await TempUser.deleteOne({ phoneNo });
       res.status(200);
       res.send({ success_message: "user successfully registered" });
     } catch (e) {
@@ -185,6 +203,9 @@ app.post("/registerVerifyOtp", async (req, res) => {
 
 app.post("/loginVerifyOtp", async (req, res) => {
   const { phoneNo, otp } = req.body;
+
+  const UserDetails = await User.findOne({ phoneNo });
+  const loginOtp = UserDetails.generatedOtp;
   console.log(otp);
   console.log(loginOtp);
   if (otp == loginOtp) {
@@ -289,7 +310,7 @@ app.post("/sendMessage", authenticateToken, async (request, response) => {
     if (findToUser === null) {
     } else {
       const recipientSocketId = findToUser.socketId;
-      console.log(recipientSocketId); 
+      console.log(recipientSocketId);
       if (recipientSocketId === "") {
       } else {
         const MessageDetilstoSendToRecipent = {
@@ -336,12 +357,14 @@ io.on("connection", (socket) => {
     }
   });
 
+  socket.on("storeregistrantsocketid", async (phoneNo) => {
+    await TempUser.updateOne({ phoneNo }, { $set: { socketId: socket.id } });
+  });
+
   socket.on("disconnect", async () => {
     try {
-      await User.updateOne(
-        { socketId: socket.id },
-        { $unset: { socketId: "" } }
-      );
+      await TempUser.findOneAndDelete({ socketId: socket.id });
+      await User.updateOne({ socketId: socket.id }, { $set: { socketId: "" } });
     } catch (error) {
       console.log(error);
     }

@@ -2,6 +2,8 @@ import styles from "./index.module.css";
 import Cookies from "js-cookie";
 import { Redirect } from "react-router-dom";
 import { Component } from "react";
+import socketIOClient from "socket.io-client";
+const socket = socketIOClient("https://apis-ichat.onrender.com");
 
 class Register extends Component {
   state = {
@@ -33,7 +35,7 @@ class Register extends Component {
     const { phoneNo, name } = this.state;
     const userDetails = { phoneNo, name };
     console.log(userDetails);
-    const url = "http://127.0.0.1:3007/registerOtp";
+    const url = "https://apis-ichat.onrender.com/registerOtp";
     const options = {
       method: "POST",
       headers: {
@@ -51,6 +53,9 @@ class Register extends Component {
           isOTPGenerated: true,
           showSubmitError: false,
         });
+
+       
+          socket.emit("storeregistrantsocketid", phoneNo);
       } else {
         const data = await response.json();
         console.log(data);
@@ -65,7 +70,7 @@ class Register extends Component {
   verifyOTP = async () => {
     const { phoneNo, otp, name } = this.state;
     const userDetails = { phoneNo, otp, name };
-    const url = "http://localhost:3007/registerVerifyOtp"; // Replace with your server-side API endpoint for verifying OTP
+    const url = "https://apis-ichat.onrender.com/registerVerifyOtp"; // Replace with your server-side API endpoint for verifying OTP
     console.log(JSON.stringify(userDetails));
     const options = {
       method: "POST",
@@ -146,7 +151,7 @@ class Register extends Component {
                 <button className={styles["register-button"]} type="submit">
                   Register
                 </button>
-                {showSubmitError && <p>{errorMsg}</p>}
+                <p className={styles.error_para}>{errorMsg}</p>
                 <p>
                   Already Registered?Click <a href="/login">here</a> to login
                 </p>

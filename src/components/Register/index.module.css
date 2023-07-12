@@ -6,24 +6,25 @@
   align-items: center;
 }
 .heading {
-  border: solid red;
   color: White;
 }
 
 .login-register-container {
   background-color: white;
-  height: 300px;
-  width: 500px;
+  padding:20px 0px 20px 0px;
+  width: 100%;
   border-radius: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  border: solid red;
 }
 .x {
+  height: 90vh;
+  width: 80%;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  height: 90vh;
 }
 
 .logo {
@@ -50,4 +51,36 @@ form {
 }
 label {
   margin-bottom: 5px;
+}
+
+@media (min-width: 768px) {
+  .x {
+    width: 60%;
+  }
+}
+@media (min-width: 1200px) {
+  .x {
+    width: 40%;
+  }
+}
+
+button {
+  background-color: #1e5176;
+  color: white;
+  border-radius: 10px;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  /* outline: ; */
+}
+button:hover {
+  background-color: black;
+}
+
+
+.error_para{
+  /* border:solid red; */
+  color :red;
+  margin-bottom: 0px;
+  margin-top: 13px;
 }

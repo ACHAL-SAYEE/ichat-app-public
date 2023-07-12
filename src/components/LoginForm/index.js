@@ -40,7 +40,7 @@ class LoginForm extends Component {
     const { phoneNo } = this.state;
     const userDetails = { phoneNo };
     console.log(userDetails);
-    const url = "http://127.0.0.1:3007/loginOtp";
+    const url = "https://apis-ichat.onrender.com/loginOtp";
     const options = {
       method: "POST",
       headers: {
@@ -72,7 +72,7 @@ class LoginForm extends Component {
   verifyOTP = async () => {
     const { phoneNo, otp, name } = this.state;
     const userDetails = { phoneNo, otp, name };
-    const url = "http://localhost:3007/loginVerifyOtp"; // Replace with your server-side API endpoint for verifying OTP
+    const url = "https://apis-ichat.onrender.com/loginVerifyOtp"; // Replace with your server-side API endpoint for verifying OTP
     console.log(JSON.stringify(userDetails));
     const options = {
       method: "POST",
@@ -80,7 +80,6 @@ class LoginForm extends Component {
         "Content-Type": "application/json", // Set the Content-Type header
       },
       body: JSON.stringify(userDetails),
-      //   body: userDetails,
     };
 
     try {
@@ -121,45 +120,48 @@ class LoginForm extends Component {
       <div className={styles.bg}>
         <h1 className={styles.heading}>Welcome To iChat App</h1>
         <div className={styles.x}>
-          <div className={styles["login-register-container"]}>
-            <div className={styles["logo-container"]}>
-              <img src="/images/iChatLogo.png" alt="logo" className={styles.logo} />
-              <h1>iChat</h1>
-            </div>
-            <form onSubmit={this.handleSubmit}>
-              {!isOTPGenerated && (
-                <>
-                  <label htmlFor="PhoneNo">PHONE NUMBER</label>
-                  <input
-                    id="PhoneNo"
-                    type="text"
-                    value={phoneNo}
-                    onChange={this.onChangePhoneNo}
-                  />
-                  <button type="submit">Get Otp</button>
-                  <p>
-                    Not Registered yet?Click <a href="/register">here</a> to
-                    register
-                  </p>
-                </>
-              )}
-              {isOTPGenerated && (
-                <>
-                  <label htmlFor="otp">OTP</label>
-                  <input
-                    id="otp"
-                    type="text"
-                    value={otp}
-                    onChange={this.onChangeotp}
-                  />
-                  <button type="submit">Login</button>
-                  <p>
-                    is otp has been sent to your number enter the otp to
-                    continue
-                  </p>
-                </>
-              )}
-            </form>
+        <div className={styles["login-register-container"]}>
+          <div className={styles["logo-container"]}>
+            <img
+              src="/images/iChatLogo.png"
+              alt="logo"
+              className={styles.logo}
+            />
+            <h1>iChat</h1>
+          </div>
+          <form onSubmit={this.handleSubmit}>
+            {!isOTPGenerated && (
+              <>
+                <label htmlFor="PhoneNo">PHONE NUMBER</label>
+                <input
+                  id="PhoneNo"
+                  type="text"
+                  value={phoneNo}
+                  onChange={this.onChangePhoneNo}
+                />
+                <button type="submit">Get Otp</button>
+                <p>
+                  Not Registered yet?Click <a href="/register">here</a> to
+                  register
+                </p>
+              </>
+            )}
+            {isOTPGenerated && (
+              <>
+                <label htmlFor="otp">OTP</label>
+                <input
+                  id="otp"
+                  type="text"
+                  value={otp}
+                  onChange={this.onChangeotp}
+                />
+                <button type="submit">Login</button>
+                <p>
+                  is otp has been sent to your number enter the otp to continue
+                </p>
+              </>
+            )}
+          </form>
           </div>
         </div>
       </div>
